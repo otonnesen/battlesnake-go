@@ -26,7 +26,7 @@ func Move(w http.ResponseWriter, req *http.Request) {
 
 	resp := Logic(*data) // Implement AI
 
-	fmt.Printf("Request: %+v\nResponse: %+v\n", data, resp)
+	// fmt.Printf("Request: %+v\nResponse: %+v\n", data, resp)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
 }
@@ -37,7 +37,7 @@ func End(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		fmt.Printf("Bad end request: %v\n", err)
 	}
+	fmt.Printf(".")
 	fmt.Printf("Request: %+v\n", data)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte("yikes"))
+	w.WriteHeader(http.StatusOK)
 }

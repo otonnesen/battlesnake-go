@@ -45,6 +45,41 @@ type Point struct {
 	Y int `json:"y"`
 }
 
+func (p Point) Up() Point {
+	return Point{p.X, p.Y - 1}
+}
+
+func (p Point) Down() Point {
+	return Point{p.X, p.Y + 1}
+}
+
+func (p Point) Left() Point {
+	return Point{p.X - 1, p.Y}
+}
+
+func (p Point) Right() Point {
+	return Point{p.X + 1, p.Y}
+}
+
+func (p Point) GetDirectionTo(p2 Point) string {
+	switch {
+	case p.Y > p2.Y:
+		return up
+	case p.Y < p2.Y:
+		return down
+	case p.X > p2.X:
+		return left
+	case p.X < p2.X:
+		return right
+	default:
+		panic("Can't happen")
+	}
+}
+
+func (p Point) Neighbors() []Point {
+	return []Point{p.Up(), p.Down(), p.Left(), p.Right()}
+}
+
 type PointList []Point
 
 type Snake struct {
