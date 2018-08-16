@@ -2,18 +2,26 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math"
 	"net/http"
+	"os"
 	"sort"
 )
 
 var startResp = StartResponse{"#75CEDD", "#7A75DD", "", "", "", ""}
 
 func main() {
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
 	http.HandleFunc("/start", LogRequest(Start))
 	http.HandleFunc("/move", LogRequest(Move))
 	http.HandleFunc("/end", LogRequest(End))
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":"+port, nil)
 }
 
 const (
