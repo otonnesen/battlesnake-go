@@ -21,23 +21,14 @@ type StartResponse struct {
 }
 
 type MoveRequest struct {
-	Food   PointList `json:"food"`
-	Height int       `json:"height"`
-	ID     int       `json:"id"`
-	Snakes SnakeList `json:"snakes"`
-	Turn   int       `json:"turn"`
-	Width  int       `json:"width"`
-	You    Snake     `json:"you"`
+	Board Board `json:"board"`
+	Game  Game  `json:"game"`
+	Turn  int   `json:"turn"`
+	You   Snake `json:"you"`
 }
 
 type MoveResponse struct {
 	Move string `json:"move"`
-}
-
-type EndRequest struct {
-	GameID     int           `json:"game_id"`
-	Winners    []string      `json:"winners"`
-	DeadSnakes DeadSnakeList `json:"dead_snakes"`
 }
 
 type Point struct {
@@ -45,66 +36,25 @@ type Point struct {
 	Y int `json:"y"`
 }
 
-func (p Point) Up() Point {
-	return Point{p.X, p.Y - 1}
-}
-
-func (p Point) Down() Point {
-	return Point{p.X, p.Y + 1}
-}
-
-func (p Point) Left() Point {
-	return Point{p.X - 1, p.Y}
-}
-
-func (p Point) Right() Point {
-	return Point{p.X + 1, p.Y}
-}
-
-func (p Point) GetDirectionTo(p2 Point) string {
-	switch {
-	case p.Y > p2.Y:
-		return "up"
-	case p.Y < p2.Y:
-		return "down"
-	case p.X > p2.X:
-		return "left"
-	case p.X < p2.X:
-		return "right"
-	default:
-		panic("Can't happen")
-	}
-}
-
-func (p Point) Neighbors() []Point {
-	return []Point{p.Up(), p.Down(), p.Left(), p.Right()}
-}
-
-type PointList []Point
-
 type Snake struct {
-	Body   PointList `json:"body"`
-	Health int       `json:"health"`
-	ID     string    `json:"id"`
-	Length int       `json:"length"`
-	Name   string    `json:"name"`
-	Taunt  string    `json:"taunt"`
+	Body   []Point `json:"body"`
+	Health int     `json:"health"`
+	ID     string  `json:"id"`
+	Length int     `json:"length"`
+	Name   string  `json:"name"`
+	Taunt  string  `json:"taunt"`
 }
 
-type SnakeList []Snake
-
-type DeathRecap struct {
-	Turn   int      `json:"turn"`
-	Causes []string `json:"causes"`
+type Board struct {
+	Food   []Point `json:"food"`
+	Height int     `json:"height"`
+	Width  int     `json:"width"`
+	Snakes []Snake `json:"snakes"`
 }
 
-type DeadSnake struct {
-	ID     string     `json:"id"`
-	Length int        `json:"length"`
-	Death  DeathRecap `json:"death"`
+type Game struct {
+	ID string `json:"id"`
 }
-
-type DeadSnakeList []DeadSnake
 
 func NewStartRequest(req *http.Request) (*StartRequest, error) {
 	d := StartRequest{}
@@ -118,50 +68,4 @@ func NewMoveRequest(req *http.Request) (*MoveRequest, error) {
 	dec := json.NewDecoder(req.Body)
 	err := dec.Decode(&d)
 	return &d, err
-}
-
-func NewEndRequest(req *http.Request) (*EndRequest, error) {
-	d := EndRequest{}
-	dec := json.NewDecoder(req.Body)
-	err := dec.Decode(&d)
-	return &d, err
-}
-
-func (l *PointList) UnmarshalJSON(b []byte) error {
-	var list struct {
-		Data []Point `json:"data"`
-	}
-
-	err := json.Unmarshal(b, &list)
-	if err != nil {
-		return err
-	}
-	*l = list.Data
-	return nil
-}
-
-func (l *SnakeList) UnmarshalJSON(b []byte) error {
-	var list struct {
-		Data []Snake `json:"data"`
-	}
-
-	err := json.Unmarshal(b, &list)
-	if err != nil {
-		return err
-	}
-	*l = list.Data
-	return nil
-}
-
-func (l *DeadSnakeList) UnmarshalJSON(b []byte) error {
-	var list struct {
-		Data []DeadSnake `json:"data`
-	}
-
-	err := json.Unmarshal(b, &list)
-	if err != nil {
-		return err
-	}
-	*l = list.Data
-	return nil
 }
