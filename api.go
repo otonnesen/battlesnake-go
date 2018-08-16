@@ -64,13 +64,13 @@ func (p Point) Right() Point {
 func (p Point) GetDirectionTo(p2 Point) string {
 	switch {
 	case p.Y > p2.Y:
-		return up
+		return "up"
 	case p.Y < p2.Y:
-		return down
+		return "down"
 	case p.X > p2.X:
-		return left
+		return "left"
 	case p.X < p2.X:
-		return right
+		return "right"
 	default:
 		panic("Can't happen")
 	}

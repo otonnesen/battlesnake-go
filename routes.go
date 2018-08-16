@@ -2,42 +2,44 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 )
 
 func Start(w http.ResponseWriter, req *http.Request) {
-	fmt.Printf("START REQUEST\n")
-	data, err := NewStartRequest(req)
+	log.Printf("START REQUEST\n")
+	_, err := NewStartRequest(req) // Do something with data?
 	if err != nil {
-		fmt.Printf("Bad start request: %v\n", err)
+		log.Printf("Bad start request: %v\n", err)
 	}
-	fmt.Printf("Request: %+v\nResponse: %+v\n", data, startResp)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(startResp)
 }
 
 func Move(w http.ResponseWriter, req *http.Request) {
-	fmt.Printf("MOVE REQUEST\n")
+	log.Printf("MOVE REQUEST\n")
 	data, err := NewMoveRequest(req)
 	if err != nil {
-		fmt.Printf("Bad move request: %v\n", err)
+		log.Printf("Bad move request: %v\n", err)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(MoveResponse{})
+		return
 	}
 
-	resp := Logic(*data) // Implement AI
+	log.Printf("Request: %+v\n", data)
 
-	// fmt.Printf("Request: %+v\nResponse: %+v\n", data, resp)
+	resp := Logic(*data) // Implement AI
+	log.Printf("Move: %s", resp.Move)
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
 }
 
 func End(w http.ResponseWriter, req *http.Request) {
-	fmt.Printf("END REQUEST\n")
-	data, err := NewEndRequest(req)
+	log.Printf("END REQUEST\n")
+	_, err := NewEndRequest(req) // Do something with data?
 	if err != nil {
-		fmt.Printf("Bad end request: %v\n", err)
+		log.Printf("Bad end request: %v\n", err)
 	}
-	fmt.Printf(".")
-	fmt.Printf("Request: %+v\n", data)
 	w.WriteHeader(http.StatusOK)
 }

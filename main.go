@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"math"
 	"net/http"
@@ -23,13 +22,6 @@ func main() {
 	http.HandleFunc("/end", LogRequest(End))
 	http.ListenAndServe(":"+port, nil)
 }
-
-const (
-	up    = "up"
-	down  = "down"
-	left  = "left"
-	right = "right"
-)
 
 var inc = -1
 
@@ -125,9 +117,9 @@ func GetDirection(start, end Point /* remove please */, data MoveRequest) MoveRe
 		}
 	}
 	sort.Slice(l, func(i, j int) bool { return l[i].d < l[j].d })
-	fmt.Printf("ID: %v\n", data.You.ID)
+	log.Printf("ID: %v\n", data.You.ID)
 	for _, p := range l {
-		fmt.Printf("%v\n", start.GetDirectionTo(p.p))
+		log.Printf("%v\n", start.GetDirectionTo(p.p))
 	}
 	return MoveResponse{start.GetDirectionTo(l[0].p)}
 }
