@@ -1,11 +1,13 @@
-package main
+package logic
 
 import (
 	"math/rand"
 	"time"
+
+	"github.com/otonnesen/battlesnake-go/api"
 )
 
-func Logic(d MoveRequest) *MoveResponse {
+func Logic(d api.MoveRequest) *api.MoveResponse {
 	// TODO
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -23,5 +25,5 @@ func Logic(d MoveRequest) *MoveResponse {
 		dir = "right"
 	}
 
-	return &MoveResponse{dir}
+	return &api.MoveResponse{dir}
 }

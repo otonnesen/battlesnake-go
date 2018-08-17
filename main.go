@@ -1,23 +1,48 @@
 package main
 
 import (
+	"io"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/otonnesen/battlesnake-go/api"
 )
 
-var startResp = StartResponse{"#75CEDD", "#7A75DD", "", "", "", ""}
+var (
+	Info    *log.Logger
+	Warning *log.Logger
+	Error   *log.Logger
+)
+
+func InitLogger(infoIO, warningIO, errorIO io.Writer, local bool) {
+	// Omits time if running on Heroku
+	var lflags int
+	if local {
+		lflags = log.Ltime
+	}
+
+	Info = log.New(infoIO, "INFO: ", lflags)
+	Warning = log.New(warningIO, "WARNING: ", lflags)
+	Error = log.New(errorIO, "ERROR: ", lflags)
+}
+
+var startResp = api.StartResponse{"#75CEDD", "#7A75DD", "", "", "", ""}
 
 func main() {
-	port := os.Getenv("PORT")
+	port := os.Getenv("PORT") // Get Heroku port
 
 	if port == "" {
-		log.Fatal("$PORT must be set")
+		InitLogger(os.Stdout, os.Stdout, os.Stdout, true)
+		Info.Printf("$PORT not set, defaulting to 8080")
+		port = "8080"
+	} else {
+		InitLogger(os.Stdout, os.Stdout, os.Stdout, false)
 	}
 
 	http.HandleFunc("/start", LogRequest(Start))
 	http.HandleFunc("/move", LogRequest(Move))
 
-	log.Printf("Server running on port %s\n", port)
+	Info.Printf("Server running on port %s\n", port)
 	http.ListenAndServe(":"+port, nil)
 }
