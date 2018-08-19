@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/otonnesen/battlesnake-go/board"
+	"github.com/otonnesen/battlesnake-go/point"
 )
 
 type StartRequest struct {
@@ -34,7 +34,7 @@ type MoveResponse struct {
 }
 
 type Snake struct {
-	Body   []board.Point `json:"body"`
+	Body   []point.Point `json:"body"`
 	Health int           `json:"health"`
 	ID     string        `json:"id"`
 	Length int           `json:"length"`
@@ -43,7 +43,7 @@ type Snake struct {
 }
 
 type Board struct {
-	Food   []board.Point `json:"food"`
+	Food   []point.Point `json:"food"`
 	Height int           `json:"height"`
 	Width  int           `json:"width"`
 	Snakes []Snake       `json:"snakes"`
@@ -55,14 +55,12 @@ type Game struct {
 
 func NewStartRequest(req *http.Request) (*StartRequest, error) {
 	d := StartRequest{}
-	dec := json.NewDecoder(req.Body)
-	err := dec.Decode(&d)
+	err := json.NewDecoder(req.Body).Decode(&d)
 	return &d, err
 }
 
 func NewMoveRequest(req *http.Request) (*MoveRequest, error) {
 	d := MoveRequest{}
-	dec := json.NewDecoder(req.Body)
-	err := dec.Decode(&d)
+	err := json.NewDecoder(req.Body).Decode(&d)
 	return &d, err
 }
