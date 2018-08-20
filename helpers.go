@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+// LogRequest logs the method, URL, and duration
+// an http handler
 func LogRequest(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()

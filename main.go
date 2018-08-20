@@ -8,11 +8,16 @@ import (
 )
 
 var (
-	Info    *log.Logger
+	// Info logs non-critical information
+	Info *log.Logger
+	// Warning logs important but non-fatal information
 	Warning *log.Logger
-	Error   *log.Logger
+	// Error logs critical faults
+	Error *log.Logger
 )
 
+// InitLogger initializes the three loggers'
+// flags and outputs
 func InitLogger(infoIO, warningIO, errorIO io.Writer, local bool) {
 	// Omits time if running on Heroku
 	var lflags int
@@ -38,8 +43,8 @@ func main() {
 		InitLogger(os.Stdout, os.Stdout, os.Stdout, false)
 	}
 
-	http.HandleFunc("/start", LogRequest(Start))
-	http.HandleFunc("/move", LogRequest(Move))
+	http.HandleFunc("/start", LogRequest(start))
+	http.HandleFunc("/move", LogRequest(move))
 
 	Info.Printf("Server running on port %s\n", port)
 	http.ListenAndServe(":"+port, nil)
