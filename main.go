@@ -5,8 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/otonnesen/battlesnake-go/api"
 )
 
 var (
@@ -27,7 +25,7 @@ func InitLogger(infoIO, warningIO, errorIO io.Writer, local bool) {
 	Error = log.New(errorIO, "ERROR: ", lflags)
 }
 
-var startResp = api.StartResponse{"#75CEDD", "#7A75DD", "", "", "", ""}
+var startResp = StartResponse{"#75CEDD", "#7A75DD", "", "", "", ""}
 
 func main() {
 	port := os.Getenv("PORT") // Get Heroku port

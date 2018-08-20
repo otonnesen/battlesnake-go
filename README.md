@@ -1,7 +1,9 @@
 # battlesnake-go
 
-Snake AI implemented in Golang for the 2018 Battlesnake competition
+Snake AI implemented in Golang for the 2019 Battlesnake competition
 
 ## TODO
-- [ ] Board data structure
-- [ ] Real AI
+- [ ] Write tests
+- [ ] Finish implementing move filtering
+- [ ] Add filters to filtering system
+- [ ] Come up with sets of filters for different scenarios

@@ -1,9 +1,7 @@
-package point
+package main
 
 import (
 	"fmt"
-
-	"github.com/otonnesen/battlesnake-go/api"
 )
 
 type Point struct {
@@ -11,43 +9,28 @@ type Point struct {
 	Y int `json:"y"`
 }
 
-// For internal use, Up(), Down()
-// etc. return more context about a given point
-func (p Point) getUp() *Point {
-	// (0,0) is at top left
+func (p Point) Up() *Point {
 	return &Point{p.X, p.Y - 1}
 }
 
-func (p Point) getDown() *Point {
+func (p Point) Down() *Point {
 	return &Point{p.X, p.Y + 1}
 }
 
-func (p Point) getLeft() *Point {
+func (p Point) Left() *Point {
 	return &Point{p.X - 1, p.Y}
 }
 
-func (p Point) getRight() *Point {
+func (p Point) Right() *Point {
 	return &Point{p.X + 1, p.Y}
 }
 
-func (p Point) Up(m *api.MoveRequest) *Point {
-	// Check if out of map, if snake is there, etc.
-	u := p.getUp()
-	if u.X >= m.Board.Width || u.X < 0 {
-		return nil
-	}
+func (p Point) Neighbors() []*Point {
+	return []*Point{p.Up(), p.Down(), p.Left(), p.Right()}
 }
 
-func (p Point) Down(m *api.MoveRequest) *Point {
-
-}
-
-func (p Point) Left(m *api.MoveRequest) *Point {
-
-}
-
-func (p Point) Right(m *api.MoveRequest) *Point {
-
+func Equal(p1, p2 Point) bool {
+	return p1.X == p2.X && p1.Y == p2.Y
 }
 
 // Suitable for use as key for a map

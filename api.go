@@ -1,10 +1,8 @@
-package api
+package main
 
 import (
 	"encoding/json"
 	"net/http"
-
-	"github.com/otonnesen/battlesnake-go/point"
 )
 
 type StartRequest struct {
@@ -33,20 +31,11 @@ type MoveResponse struct {
 	Move string `json:"move"`
 }
 
-type Snake struct {
-	Body   []point.Point `json:"body"`
-	Health int           `json:"health"`
-	ID     string        `json:"id"`
-	Length int           `json:"length"`
-	Name   string        `json:"name"`
-	Taunt  string        `json:"taunt"`
-}
-
 type Board struct {
-	Food   []point.Point `json:"food"`
-	Height int           `json:"height"`
-	Width  int           `json:"width"`
-	Snakes []Snake       `json:"snakes"`
+	Food   []Point `json:"food"`
+	Height int     `json:"height"`
+	Width  int     `json:"width"`
+	Snakes []Snake `json:"snakes"`
 }
 
 type Game struct {
