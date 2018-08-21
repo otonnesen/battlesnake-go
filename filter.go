@@ -7,6 +7,12 @@ import (
 
 type filter func(*MoveRequest, []*Point) []*Point
 
+// type move struct {
+// 	Point          Point
+// 	FoodScore      int
+// 	FloodFillScore int
+// }
+
 // Tail looks for a tail (yours or not) to chase if available.
 // If no tail can be found, returns the initial
 // input moves.
@@ -69,15 +75,16 @@ func Food(m *MoveRequest, moves []*Point) []*Point {
 	sort.Slice(foodlist, func(i, j int) bool {
 		distI := foodlist[i].DistanceTo(m.You.Head())
 		distJ := foodlist[j].DistanceTo(m.You.Head())
-		distNumI := math.Sqrt(math.Pow(float64(distI.X), 2) + math.Pow(float64(distI.Y), 2))
-		distNumJ := math.Sqrt(math.Pow(float64(distJ.X), 2) + math.Pow(float64(distJ.Y), 2))
+		distNumI := math.Sqrt(math.Pow(float64(distI.X), 2) +
+			math.Pow(float64(distI.Y), 2))
+		distNumJ := math.Sqrt(math.Pow(float64(distJ.X), 2) +
+			math.Pow(float64(distJ.Y), 2))
 		return distNumI < distNumJ
 	})
 
 	for _, food := range foodlist {
 		for _, move := range moves {
-			if Equal(m.You.Head().DirectionTo(&food),
-				move) {
+			if Equal(m.You.Head().DirectionTo(&food), move) {
 				new = append(new, move)
 			}
 		}
@@ -86,6 +93,38 @@ func Food(m *MoveRequest, moves []*Point) []*Point {
 		return new
 	}
 	return moves
+}
+
+// Space filters any moves that lead to a space without
+// enough room for the entire length of the snake
+func Space(m *MoveRequest, moves []*Point) []*Point {
+	new := []*Point{}
+	var visited map[Point]bool
+
+	for _, move := range moves {
+		visited = make(map[Point]bool)
+		if floodFill(m, move, visited) < len(m.You.Body) {
+			new = append(new, move)
+		}
+	}
+	if len(new) != 0 {
+		return new
+	}
+	return moves
+}
+
+func floodFill(m *MoveRequest, p *Point, visited map[Point]bool) int {
+	for _, n := range p.Neighbors() {
+		if visited[*n] {
+			continue
+		} else if !n.IsValid(m) {
+			continue
+		} else {
+			visited[*n] = true
+			return 1 + floodFill(m, n, visited)
+		}
+	}
+	return 1
 }
 
 // ChainFilters takes a slice of filters and a MoveRequest.
@@ -106,6 +145,7 @@ func getMoves(m *MoveRequest) []*Point {
 		Tail,
 		Head,
 		Food,
+		Space,
 	}
 	return ChainFilters(m, testFilters)
 }

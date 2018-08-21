@@ -16,6 +16,7 @@ func start(w http.ResponseWriter, req *http.Request) {
 
 func move(w http.ResponseWriter, req *http.Request) {
 	data, err := NewMoveRequest(req)
+	Info.Printf("%+v\n", data)
 	if err != nil {
 		Error.Printf("Bad move request: %v\n", err)
 		w.Header().Set("Content-Type", "application/json")
