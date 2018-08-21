@@ -11,19 +11,19 @@ type Snake struct {
 
 // Head returns the Point corresponding
 // to s' head (the first Point in its
-// Body array)
+// Body slice)
 func (s Snake) Head() *Point {
 	return &s.Body[0]
 }
 
 // Tail returns the Point corresponding
 // to s' tail (the last Point in its
-// Body array)
+// Body slice)
 func (s Snake) Tail() *Point {
 	return &s.Body[len(s.Body)-1]
 }
 
-// SmallerSnakes returns an array of every snake
+// SmallerSnakes returns a slice of every snake
 // with length strictly lesser than that of
 // snake s
 func (s Snake) SmallerSnakes(m *MoveRequest) []Snake {

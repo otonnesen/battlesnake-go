@@ -34,7 +34,7 @@ func (p Point) Right() *Point {
 	return &Point{p.X + 1, p.Y}
 }
 
-// Neighbors returns an array of Points
+// Neighbors returns a slice of Points
 // adjacent to p
 func (p Point) Neighbors() []*Point {
 	return []*Point{p.Up(), p.Down(), p.Left(), p.Right()}
@@ -60,7 +60,7 @@ func (p Point) IsTail(m *MoveRequest) bool {
 	return false
 }
 
-// IsValid returns true if p is within the board
+// IsInBounds returns true if p is within the board
 // specified by the MoveRequest
 func (p Point) IsInBounds(m *MoveRequest) bool {
 	switch {
@@ -77,6 +77,8 @@ func (p Point) IsInBounds(m *MoveRequest) bool {
 	}
 }
 
+// IsSnake returns true if p is part of any
+// snake's body
 func (p Point) IsSnake(m *MoveRequest) bool {
 	for _, snake := range m.Board.Snakes {
 		for _, p2 := range snake.Body {
@@ -88,14 +90,35 @@ func (p Point) IsSnake(m *MoveRequest) bool {
 	return false
 }
 
+// IsValid returns true if p is in bounds
+// and is not part of a snake's body
 func (p Point) IsValid(m *MoveRequest) bool {
 	return p.IsInBounds(m) && !p.IsSnake(m)
 }
 
-// DirectionTo returns the closest direction
+// DirectionTo returns p's closest Neighbor to p2.
+func (p Point) DirectionTo(p2 *Point) *Point {
+	if Equal(&p, p2) {
+		return &p
+	}
+	dx := p2.X - p.X
+	dy := p2.Y - p.Y
+	if math.Abs(float64(dy)) > math.Abs(float64(dx)) {
+		if dy < 0 {
+			return p.Up()
+		}
+		return p.Down()
+	}
+	if dx < 0 {
+		return p.Left()
+	}
+	return p.Right()
+}
+
+// DirectionString returns the closest direction
 // ("up", "down", "left", or "right") to get
 // from p to p2, or nil if they are equal.
-func (p Point) DirectionTo(p2 *Point) string {
+func (p Point) DirectionString(p2 *Point) string {
 	if Equal(&p, p2) {
 		return ""
 	}
@@ -111,6 +134,12 @@ func (p Point) DirectionTo(p2 *Point) string {
 		return "left"
 	}
 	return "right"
+}
+
+// DistanceTo returns the distance from point p to point p2
+func (p Point) DistanceTo(p2 *Point) float64 {
+	return math.Sqrt(math.Pow(float64(p.X-p2.X), 2) +
+		math.Pow(float64(p.Y-p2.Y), 2))
 }
 
 // Equal returns a boolean reporting whether p1 and p2 have the same X and Y fields

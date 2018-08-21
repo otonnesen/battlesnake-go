@@ -1,5 +1,7 @@
 package main
 
+import "sort"
+
 type filter func(*MoveRequest, []*Point) []*Point
 
 // Tail looks for a tail (yours or not) to chase if available.
@@ -39,7 +41,7 @@ func Head(m *MoveRequest, moves []*Point) []*Point {
 	return moves
 }
 
-// Valid removes any moves that are out of bounds
+// Valid filters any moves that are out of bounds
 func Valid(m *MoveRequest, moves []*Point) []*Point {
 	new := []*Point{}
 	for _, move := range moves {
@@ -55,9 +57,34 @@ func Valid(m *MoveRequest, moves []*Point) []*Point {
 	return moves
 }
 
-// ChainFilters takes an array of filters and a MoveRequest.
-// It then filters the allowed moves according to each filter
-// sequentially and returns the array of remaining moves.
+// Food filters for a valid move that moves toward the closest food
+func Food(m *MoveRequest, moves []*Point) []*Point {
+	new := []*Point{}
+	foodlist := m.Board.Food
+
+	// Sort foodlist based on distance from your head
+	sort.Slice(foodlist, func(i, j int) bool {
+		return foodlist[i].DistanceTo(m.You.Head()) <
+			foodlist[i].DistanceTo(m.You.Head())
+	})
+
+	for _, food := range foodlist {
+		for _, move := range moves {
+			if Equal(m.You.Head().DirectionTo(&food),
+				move) {
+				new = append(new, move)
+			}
+		}
+	}
+	if len(new) != 0 {
+		return new
+	}
+	return moves
+}
+
+// ChainFilters takes a slice of filters and a MoveRequest.
+// It then prunes the allowed moves according to each filter
+// sequentially and returns the slice of remaining moves.
 func ChainFilters(m *MoveRequest, filters []filter) []*Point {
 	moves := m.You.Head().Neighbors()
 	for _, f := range filters {
@@ -72,6 +99,7 @@ func getMoves(m *MoveRequest) []*Point {
 		Valid,
 		Tail,
 		Head,
+		Food,
 	}
 	return ChainFilters(m, testFilters)
 }
