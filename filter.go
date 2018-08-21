@@ -103,7 +103,7 @@ func Space(m *MoveRequest, moves []*Point) []*Point {
 
 	for _, move := range moves {
 		visited = make(map[Point]bool)
-		if floodFill(m, move, visited) < len(m.You.Body) {
+		if floodFill(m, move, visited) > len(m.You.Body) {
 			new = append(new, move)
 		}
 	}
