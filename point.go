@@ -137,9 +137,9 @@ func (p Point) DirectionString(p2 *Point) string {
 }
 
 // DistanceTo returns the distance from point p to point p2
-func (p Point) DistanceTo(p2 *Point) float64 {
-	return math.Sqrt(math.Pow(float64(p.X-p2.X), 2) +
-		math.Pow(float64(p.Y-p2.Y), 2))
+// as a vector represented by a Point
+func (p Point) DistanceTo(p2 *Point) *Point {
+	return &Point{p2.X - p.X, p2.Y - p.Y}
 }
 
 // Equal returns a boolean reporting whether p1 and p2 have the same X and Y fields

@@ -1,6 +1,9 @@
 package main
 
-import "sort"
+import (
+	"math"
+	"sort"
+)
 
 type filter func(*MoveRequest, []*Point) []*Point
 
@@ -64,8 +67,11 @@ func Food(m *MoveRequest, moves []*Point) []*Point {
 
 	// Sort foodlist based on distance from your head
 	sort.Slice(foodlist, func(i, j int) bool {
-		return foodlist[i].DistanceTo(m.You.Head()) <
-			foodlist[i].DistanceTo(m.You.Head())
+		distI := foodlist[i].DistanceTo(m.You.Head())
+		distJ := foodlist[j].DistanceTo(m.You.Head())
+		distNumI := math.Sqrt(math.Pow(float64(distI.X), 2) + math.Pow(float64(distI.Y), 2))
+		distNumJ := math.Sqrt(math.Pow(float64(distJ.X), 2) + math.Pow(float64(distJ.Y), 2))
+		return distNumI < distNumJ
 	})
 
 	for _, food := range foodlist {
