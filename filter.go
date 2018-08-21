@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"sort"
 )
@@ -103,6 +104,7 @@ func Space(m *MoveRequest, moves []*Point) []*Point {
 
 	for _, move := range moves {
 		visited = make(map[Point]bool)
+		fmt.Printf("Spaces for %s: %d\n", move, floodFill(m, move, visited))
 		if floodFill(m, move, visited) > len(m.You.Body) {
 			new = append(new, move)
 		}
@@ -115,9 +117,7 @@ func Space(m *MoveRequest, moves []*Point) []*Point {
 
 func floodFill(m *MoveRequest, p *Point, visited map[Point]bool) int {
 	for _, n := range p.Neighbors() {
-		if visited[*n] {
-			continue
-		} else if !n.IsValid(m) {
+		if visited[*n] || !n.IsValid(m) {
 			continue
 		} else {
 			visited[*n] = true
