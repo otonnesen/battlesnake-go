@@ -6,9 +6,7 @@ type Snake struct {
 	Body   []Point `json:"body"`
 	Health int     `json:"health"`
 	ID     string  `json:"id"`
-	Length int     `json:"length"`
 	Name   string  `json:"name"`
-	Taunt  string  `json:"taunt"`
 }
 
 // Head returns the Point corresponding
@@ -22,5 +20,18 @@ func (s Snake) Head() *Point {
 // to s' tail (the last Point in its
 // Body array)
 func (s Snake) Tail() *Point {
-	return &s.Body[len(s.Body)]
+	return &s.Body[len(s.Body)-1]
+}
+
+// SmallerSnakes returns an array of every snake
+// with length strictly lesser than that of
+// snake s
+func (s Snake) SmallerSnakes(m *MoveRequest) []Snake {
+	smaller := []Snake{}
+	for _, snake := range m.Board.Snakes {
+		if len(snake.Body) < len(s.Body) {
+			smaller = append(smaller, snake)
+		}
+	}
+	return smaller
 }

@@ -8,9 +8,9 @@ import (
 // StartRequest is specified by the
 // 2019 battlesnake API
 type StartRequest struct {
-	GameID int `json:"game_id"`
-	Width  int `json:"width"`
-	Height int `json:"height"`
+	GameID int
+	Width  int
+	Height int
 }
 
 // StartResponse is specified by the

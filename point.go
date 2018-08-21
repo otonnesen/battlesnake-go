@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 // Point represents a pair of coordinates on
@@ -39,8 +40,81 @@ func (p Point) Neighbors() []*Point {
 	return []*Point{p.Up(), p.Down(), p.Left(), p.Right()}
 }
 
+// IsHead returns true if p is a live snake's head
+func (p Point) IsHead(m *MoveRequest) bool {
+	for _, snake := range m.Board.Snakes {
+		if Equal(&p, snake.Head()) {
+			return true
+		}
+	}
+	return false
+}
+
+// IsTail returns true if p is a live snake's tail
+func (p Point) IsTail(m *MoveRequest) bool {
+	for _, snake := range m.Board.Snakes {
+		if Equal(&p, snake.Tail()) {
+			return true
+		}
+	}
+	return false
+}
+
+// IsValid returns true if p is within the board
+// specified by the MoveRequest
+func (p Point) IsInBounds(m *MoveRequest) bool {
+	switch {
+	case p.X < 0:
+		return false
+	case p.Y < 0:
+		return false
+	case p.X >= m.Board.Width:
+		return false
+	case p.Y >= m.Board.Height:
+		return false
+	default:
+		return true
+	}
+}
+
+func (p Point) IsSnake(m *MoveRequest) bool {
+	for _, snake := range m.Board.Snakes {
+		for _, p2 := range snake.Body {
+			if Equal(&p, &p2) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func (p Point) IsValid(m *MoveRequest) bool {
+	return p.IsInBounds(m) && !p.IsSnake(m)
+}
+
+// DirectionTo returns the closest direction
+// ("up", "down", "left", or "right") to get
+// from p to p2, or nil if they are equal.
+func (p Point) DirectionTo(p2 *Point) string {
+	if Equal(&p, p2) {
+		return ""
+	}
+	dx := p2.X - p.X
+	dy := p2.Y - p.Y
+	if math.Abs(float64(dy)) > math.Abs(float64(dx)) {
+		if dy < 0 {
+			return "up"
+		}
+		return "down"
+	}
+	if dx < 0 {
+		return "left"
+	}
+	return "right"
+}
+
 // Equal returns a boolean reporting whether p1 and p2 have the same X and Y fields
-func Equal(p1, p2 Point) bool {
+func Equal(p1, p2 *Point) bool {
 	return p1.X == p2.X && p1.Y == p2.Y
 }
 

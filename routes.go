@@ -23,7 +23,7 @@ func move(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	resp := Logic(*data) // Get Move
+	resp := &MoveResponse{data.You.Head().DirectionTo(getMoves(data)[0])} // Get Move
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
