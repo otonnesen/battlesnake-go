@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"sort"
 )
 
@@ -91,31 +90,38 @@ func Food(m *MoveRequest, moves []*Point) []*Point {
 // enough room for the entire length of the snake
 func Space(m *MoveRequest, moves []*Point) []*Point {
 	new := []*Point{}
-	var visited map[string]bool
-	var spaces int
 
-	for _, move := range moves {
-		visited = make(map[string]bool)
-		spaces = floodFill(m, move, visited)
-		fmt.Printf("Spaces for %s: %d\n", move, spaces)
-		if spaces > len(m.You.Body) {
-			new = append(new, move)
-		}
-	}
+	sort.Slice(moves, func(i, j int) bool {
+		return floodFill(m, moves[i]) > floodFill(m, moves[j])
+	})
+
 	if len(new) != 0 {
 		return new
 	}
 	return moves
 }
 
-func floodFill(m *MoveRequest, p *Point, visited map[string]bool) int {
+func floodFill(m *MoveRequest, p *Point) int {
+	if !p.IsValid(m) {
+		return 0
+	}
+	visited := make(map[string]bool)
+	visited[p.String()] = true
+	sum := 1
+	for _, n := range p.Neighbors() {
+		sum = sum + floodFillRecur(m, n, visited)
+	}
+	return sum
+}
+
+func floodFillRecur(m *MoveRequest, p *Point, visited map[string]bool) int {
 	if visited[p.String()] || !p.IsValid(m) {
 		return 0
 	}
 	visited[p.String()] = true
 	sum := 1
 	for _, n := range p.Neighbors() {
-		sum = sum + floodFill(m, n, visited)
+		sum = sum + floodFillRecur(m, n, visited)
 	}
 	return sum
 }
