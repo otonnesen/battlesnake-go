@@ -100,12 +100,14 @@ func Food(m *MoveRequest, moves []*Point) []*Point {
 // enough room for the entire length of the snake
 func Space(m *MoveRequest, moves []*Point) []*Point {
 	new := []*Point{}
-	var visited map[Point]bool
+	var visited map[string]bool
+	var spaces int
 
 	for _, move := range moves {
-		visited = make(map[Point]bool)
-		fmt.Printf("Spaces for %s: %d\n", move, floodFill(m, move, visited))
-		if floodFill(m, move, visited) > len(m.You.Body) {
+		visited = make(map[string]bool)
+		spaces = floodFill(m, move, visited)
+		fmt.Printf("Spaces for %s: %d\n", move, spaces)
+		if spaces > len(m.You.Body) {
 			new = append(new, move)
 		}
 	}
@@ -115,16 +117,16 @@ func Space(m *MoveRequest, moves []*Point) []*Point {
 	return moves
 }
 
-func floodFill(m *MoveRequest, p *Point, visited map[Point]bool) int {
-	for _, n := range p.Neighbors() {
-		if visited[*n] || !n.IsValid(m) {
-			continue
-		} else {
-			visited[*n] = true
-			return 1 + floodFill(m, n, visited)
-		}
+func floodFill(m *MoveRequest, p *Point, visited map[string]bool) int {
+	if visited[p.String()] || !p.IsValid(m) {
+		return 0
 	}
-	return 1
+	visited[p.String()] = true
+	sum := 1
+	for _, n := range p.Neighbors() {
+		sum = sum + floodFill(m, n, visited)
+	}
+	return sum
 }
 
 // ChainFilters takes a slice of filters and a MoveRequest.
