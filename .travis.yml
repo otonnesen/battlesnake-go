@@ -1,0 +1,16 @@
+language: go
+go:
+- 1.10.x
+before_install:
+- go get -t -v ./...
+script:
+- go test -race -coverprofile=coverage.out -covermode=atomic
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+deploy:
+  provider: heroku
+  api_key:
+    secure: a2M9xaPaZtIEZaGNUkQC+P8zvKDUbNDIz0evzXWGQs5+ZJ6nmTUBavlYpLW6sKpfM9bYgH3iXcv9z63k0eiP3/LiYBy41w2VhPsNnP1uG0XYouhwXTxg5B6rbkGd+GweJQnbaAqVoWTAbjfouJ1KlTJ8AAAPWUiu572jTl2Z2kGkoEYBKZ5NfzP0DdU+h4DEeeN4wFeGggsTRvpmdPy36ykbpK8AY9xn7nl6jN6mLoAVbFTohWrH+KT2jg+TDCZvTTjNqa2kl2f8ldHH5CoIPdvTx9wIrbTMpXiR3vE5lYV1mYsvIuvjiBKPi3SqYKrme4d4cepbjc4fW2UnQXkdHGb2S/VUijG20CUm3FuTOMBaiRazkUrSPQN1+WfCd6DBR/PXQ32k03NpI6uo2+5TA79usUIyeFK+iitz+04G2vXDWxd2PYfJcumXFIVnhSFjtsIn5BNivQlO0CanRtTZqXSKqFoiHwIKUemh4dHZPKvRYsq5ckuM3oyG+RVU7OtdkyBcejg0LKullmcD6JkNqX8gJu2aYOjIlwUALCaodHfhZ5c2LhxGdgdibjhreTBct5MiVNMyJLvhGowBTkP57i3fXHmmjbiKe70YRNeJka+/f7v44PvEfN/4bK2bV9nvfRrmzzOvXBeI8UEH2iOjo0ye33ktRil3Yiq18VOoFO0=
+  app: go-battlesnake
+  on:
+    repo: otonnesen/battlesnake-go
