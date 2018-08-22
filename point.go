@@ -142,6 +142,13 @@ func (p Point) DistanceTo(p2 *Point) *Point {
 	return &Point{p2.X - p.X, p2.Y - p.Y}
 }
 
+// DistanceFloat returns the distance from point p
+// to point p2 as a number
+func (p Point) DistanceFloat(p2 *Point) float64 {
+	d := p.DistanceTo(p2)
+	return math.Sqrt(math.Pow(float64(d.X), 2) + math.Pow(float64(d.Y), 2))
+}
+
 // Equal returns a boolean reporting whether p1 and p2 have the same X and Y fields
 func Equal(p1, p2 *Point) bool {
 	return p1.X == p2.X && p1.Y == p2.Y

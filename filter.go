@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"sort"
 )
 
@@ -67,32 +66,24 @@ func Valid(m *MoveRequest, moves []*Point) []*Point {
 	return moves
 }
 
-// Food filters for a valid move that moves toward the closest food
+// Food prefers a valid move that moves toward the closest food
 func Food(m *MoveRequest, moves []*Point) []*Point {
-	new := []*Point{}
-	foodlist := m.Board.Food
+	var closest Point
+	// Max int
+	var dist = float64(int64(^uint64(0) >> 1))
 
-	// Sort foodlist based on distance from your head
-	sort.Slice(foodlist, func(i, j int) bool {
-		distI := foodlist[i].DistanceTo(m.You.Head())
-		distJ := foodlist[j].DistanceTo(m.You.Head())
-		distNumI := math.Sqrt(math.Pow(float64(distI.X), 2) +
-			math.Pow(float64(distI.Y), 2))
-		distNumJ := math.Sqrt(math.Pow(float64(distJ.X), 2) +
-			math.Pow(float64(distJ.Y), 2))
-		return distNumI < distNumJ
-	})
-
-	for _, food := range foodlist {
-		for _, move := range moves {
-			if Equal(m.You.Head().DirectionTo(&food), move) {
-				new = append(new, move)
-			}
+	// Find closest food
+	for _, food := range m.Board.Food {
+		if d := m.You.Head().DistanceFloat(&food); d < dist {
+			dist = d
+			closest = food
 		}
 	}
-	if len(new) != 0 {
-		return new
-	}
+
+	sort.Slice(moves, func(i, j int) bool {
+		return moves[i].DistanceFloat(&closest) < moves[j].DistanceFloat(&closest)
+	})
+
 	return moves
 }
 

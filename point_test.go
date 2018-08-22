@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"math"
+	"testing"
+)
 
 var exampleMoveRequest = &MoveRequest{
 	Board: board{
@@ -566,6 +569,79 @@ func TestDistanceTo(t *testing.T) {
 
 	for _, i := range distlist {
 		if !Equal(i.from.DistanceTo(&i.to), &i.dist) {
+			t.Errorf("Distance from %s to %s should be %s, but instead was %s.\n",
+				i.from, i.to, i.dist, i.from.DistanceTo(&i.to))
+		}
+	}
+}
+
+func TestDistanceFloat(t *testing.T) {
+	distlist := []struct {
+		from Point
+		to   Point
+		dist Point
+	}{
+		{
+			from: Point{
+				X: 10,
+				Y: 12,
+			},
+			to: Point{
+				X: 14,
+				Y: 6,
+			},
+			dist: Point{
+				X: 4,
+				Y: -6,
+			},
+		},
+		{
+			from: Point{
+				X: 14,
+				Y: 12,
+			},
+			to: Point{
+				X: 10,
+				Y: 6,
+			},
+			dist: Point{
+				X: -4,
+				Y: -6,
+			},
+		},
+		{
+			from: Point{
+				X: 0,
+				Y: 0,
+			},
+			to: Point{
+				X: 19,
+				Y: 25,
+			},
+			dist: Point{
+				X: 19,
+				Y: 25,
+			},
+		},
+		{
+			from: Point{
+				X: 19,
+				Y: 25,
+			},
+			to: Point{
+				X: 0,
+				Y: 0,
+			},
+			dist: Point{
+				X: -19,
+				Y: -25,
+			},
+		},
+	}
+
+	for _, i := range distlist {
+		if i.from.DistanceFloat(&i.to) != math.Sqrt(math.Pow(float64(i.dist.X), 2)+
+			math.Pow(float64(i.dist.Y), 2)) {
 			t.Errorf("Distance from %s to %s should be %s, but instead was %s.\n",
 				i.from, i.to, i.dist, i.from.DistanceTo(&i.to))
 		}
