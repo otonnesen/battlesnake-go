@@ -12,35 +12,35 @@ type Point struct {
 	Y int `json:"y"`
 }
 
-// Up returns the Point above p
+// Up returns the Point above p.
 func (p Point) Up() *Point {
 	return &Point{p.X, p.Y - 1}
 }
 
-// Down returns the Point below above p
+// Down returns the Point below above p.
 func (p Point) Down() *Point {
 	return &Point{p.X, p.Y + 1}
 }
 
 // Left returns the Point to the
-// left of p
+// left of p.
 func (p Point) Left() *Point {
 	return &Point{p.X - 1, p.Y}
 }
 
 // Right returns the Point to the
-// right of p
+// right of p.
 func (p Point) Right() *Point {
 	return &Point{p.X + 1, p.Y}
 }
 
 // Neighbors returns a slice of Points
-// adjacent to p
+// adjacent to p.
 func (p Point) Neighbors() []*Point {
 	return []*Point{p.Up(), p.Down(), p.Left(), p.Right()}
 }
 
-// IsHead returns true if p is a live snake's head
+// IsHead returns true if p is a live snake's head.
 func (p Point) IsHead(m *MoveRequest) bool {
 	for _, snake := range m.Board.Snakes {
 		if Equal(&p, snake.Head()) {
@@ -50,7 +50,7 @@ func (p Point) IsHead(m *MoveRequest) bool {
 	return false
 }
 
-// IsTail returns true if p is a live snake's tail
+// IsTail returns true if p is a live snake's tail.
 func (p Point) IsTail(m *MoveRequest) bool {
 	for _, snake := range m.Board.Snakes {
 		if Equal(&p, snake.Tail()) {
@@ -61,7 +61,7 @@ func (p Point) IsTail(m *MoveRequest) bool {
 }
 
 // IsInBounds returns true if p is within the board
-// specified by the MoveRequest
+// specified by the MoveRequest.
 func (p Point) IsInBounds(m *MoveRequest) bool {
 	switch {
 	case p.X < 0:
@@ -78,7 +78,7 @@ func (p Point) IsInBounds(m *MoveRequest) bool {
 }
 
 // IsSnake returns true if p is part of any
-// snake's body
+// snake's body.
 func (p Point) IsSnake(m *MoveRequest) bool {
 	for _, snake := range m.Board.Snakes {
 		for _, p2 := range snake.Body {
@@ -91,9 +91,16 @@ func (p Point) IsSnake(m *MoveRequest) bool {
 }
 
 // IsValid returns true if p is in bounds
-// and is not part of a snake's body
+// and is not part of a snake's body.
 func (p Point) IsValid(m *MoveRequest) bool {
 	return p.IsInBounds(m) && !p.IsSnake(m)
+}
+
+// GetSnakeID returns the ID corresponding to the
+// snake whose body contains Point p.
+func (p Point) GetSnakeID(m *MoveRequest) string {
+	// TODO
+	return ""
 }
 
 // DirectionTo returns p's closest Neighbor to p2.
@@ -137,24 +144,24 @@ func (p Point) DirectionString(p2 *Point) string {
 }
 
 // DistanceTo returns the distance from point p to point p2
-// as a vector represented by a Point
+// as a vector represented by a Point.
 func (p Point) DistanceTo(p2 *Point) *Point {
 	return &Point{p2.X - p.X, p2.Y - p.Y}
 }
 
 // DistanceFloat returns the distance from point p
-// to point p2 as a number
+// to point p2 as a number.
 func (p Point) DistanceFloat(p2 *Point) float64 {
 	d := p.DistanceTo(p2)
 	return math.Sqrt(math.Pow(float64(d.X), 2) + math.Pow(float64(d.Y), 2))
 }
 
-// Equal returns a boolean reporting whether p1 and p2 have the same X and Y fields
+// Equal returns a boolean reporting whether p1 and p2 have the same X and Y fields.
 func Equal(p1, p2 *Point) bool {
 	return p1.X == p2.X && p1.Y == p2.Y
 }
 
-// Suitable for use as key for a map
+// Suitable for use as key for a map.
 func (p Point) String() string {
 	return fmt.Sprintf("(%d,%d)", p.X, p.Y)
 }
