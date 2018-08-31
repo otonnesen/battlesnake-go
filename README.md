@@ -3,16 +3,24 @@
 [![codecov](https://codecov.io/gh/otonnesen/battlesnake-go/branch/master/graph/badge.svg)](https://codecov.io/gh/otonnesen/battlesnake-go)
 # battlesnake-go
 
-Snake AI implemented in Go for the 2019 Battlesnake competition
+Snake AI implemented in Golang for the 2019 Battlesnake competition
 
+### Running the Snake
 
+Clone the repository with<br>
+`git clone https://github.com/otonnesen/battlesnake-go`
+
+Go into the directory and compile<br>
+`cd battlesnake-go`<br>
+`go build`
+
+Run the snake with<br>
+`./battesnake-go`
+
+The web server runs on whatever port the $PORT environment variable is set to, and defaults to 8080 if unset.
 
 ## TODO
 - [ ] Write tests
-	- [x] point.go
-	- [ ] snake.go
-	- [ ] filter.go
 - [x] Finish implementing move filtering
-- [x] Add filters to filtering system
-- [ ] Come up with sets of filters for different scenarios (Aggro, grow, stagnate, etc.)
-- [x] Floodfill filter
+- [ ] Add filters to filtering system
+- [ ] Come up with sets of filters for different scenarios
