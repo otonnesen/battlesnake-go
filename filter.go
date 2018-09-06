@@ -136,19 +136,20 @@ func getMoves(m *MoveRequest) []*Point {
 	checkValid := []filter{
 		Valid,
 		Head,
+		Tail,
 	}
 	space := []filter{
-		Tail,
 		Food,
 		Space,
 	}
 	food := []filter{
-		Tail,
 		Space,
 		Food,
 	}
+	foodPanic := []filter{
+		Food,
+	}
 	stagnate := []filter{
-		Tail,
 		Space,
 	}
 
@@ -164,6 +165,10 @@ func getMoves(m *MoveRequest) []*Point {
 	// If ratio of your health:distance to food less than 1.25
 	if float64(m.You.Health)/float64(dist) < 1.25 {
 		return ChainFilters(m, checkValid, food)
+	}
+
+	if float64(m.You.Health)/float64(dist) < 1.1 {
+		return ChainFilters(m, checkValid, foodPanic)
 	}
 
 	if m.You.Health > 30 {
