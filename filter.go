@@ -137,10 +137,38 @@ func getMoves(m *MoveRequest) []*Point {
 		Valid,
 		Head,
 	}
-	testFilters := []filter{
+	space := []filter{
 		Tail,
 		Food,
 		Space,
 	}
-	return ChainFilters(m, checkValid, testFilters)
+	food := []filter{
+		Tail,
+		Space,
+		Food,
+	}
+	stagnate := []filter{
+		Tail,
+		Space,
+	}
+
+	var dist = float64(int64(^uint64(0) >> 1))
+
+	// Find distance to closest food
+	for _, food := range m.Board.Food {
+		if d := m.You.Head().DistanceFloat(&food); d < dist {
+			dist = d
+		}
+	}
+
+	// If ratio of your health:distance to food less than 1.25
+	if float64(m.You.Health)/float64(dist) < 1.25 {
+		return ChainFilters(m, checkValid, food)
+	}
+
+	if m.You.Health > 30 {
+		return ChainFilters(m, checkValid, stagnate)
+	}
+
+	return ChainFilters(m, checkValid, space)
 }
