@@ -1,9 +1,6 @@
 {
 	"ImportPath": "github.com/otonnesen/battlesnake-go",
-	"GoVersion": "go1.10",
+	"GoVersion": "go1.11",
 	"GodepVersion": "v80",
-	"Packages": [
-		"./"
-	],
 	"Deps": []
 }
