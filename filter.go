@@ -118,7 +118,7 @@ func floodFillRecur(m *MoveRequest, p *Point, visited map[string]bool) int {
 	return sum
 }
 
-// ChainFilters takes a slice of filters and a MoveRequest.
+// ChainFilters takes a slices of filters and a MoveRequest.
 // It then prunes the allowed moves according to each filter
 // sequentially and returns the slice of remaining moves.
 func ChainFilters(m *MoveRequest, filters ...[]filter) []*Point {

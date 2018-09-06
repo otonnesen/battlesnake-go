@@ -3,7 +3,8 @@
 if [ -z $1 ]; then
 	d="localhost:8080"
 	go build ..
-	../battlesnake-go > /dev/null &
+	# ../battlesnake-go > /dev/null &
+	../battlesnake-go &
 else
 	d="$1"
 fi

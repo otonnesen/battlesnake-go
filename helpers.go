@@ -25,9 +25,9 @@ func InitLogger(infoIO, warningIO, errorIO io.Writer, local bool) {
 		lflags = log.Ltime
 	}
 
-	Info = log.New(infoIO, "INFO: ", lflags)
+	Info = log.New(infoIO, "INFO:    ", lflags)
 	Warning = log.New(warningIO, "WARNING: ", lflags)
-	Error = log.New(errorIO, "ERROR: ", lflags)
+	Error = log.New(errorIO, "ERROR:   ", lflags)
 }
 
 // LogRequest logs the method, URL, and duration
