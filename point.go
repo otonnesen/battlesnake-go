@@ -78,10 +78,13 @@ func (p Point) IsInBounds(m *MoveRequest) bool {
 }
 
 // IsSnake returns true if p is part of any
-// snake's body.
+// snake's body, excluding the tail.
 func (p Point) IsSnake(m *MoveRequest) bool {
 	for _, snake := range m.Board.Snakes {
 		for _, p2 := range snake.Body {
+			if p2.IsTail(m) {
+				continue
+			}
 			if Equal(&p, &p2) {
 				return true
 			}
