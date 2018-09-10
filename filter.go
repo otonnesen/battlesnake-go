@@ -124,6 +124,23 @@ func Space(m *MoveRequest, moves []*Point) []*Point {
 	return moves
 }
 
+// SpaceStrict removes moves that lead to spaces without enough room
+// for the entire snake body
+func SpaceStrict(m *MoveRequest, moves []*Point) []*Point {
+	new := []*Point{}
+	for _, move := range moves {
+		if floodFill(m, move) > len(m.You.Body) {
+			new = append(new, move)
+		}
+	}
+
+	if len(new) != 0 {
+		return new
+	}
+
+	return moves
+}
+
 // Recursive DFS to count number of reachable spaces.
 func floodFill(m *MoveRequest, p *Point) int {
 	if !p.IsValid(m) {
@@ -182,6 +199,7 @@ func getMoves(m *MoveRequest) []*Point {
 	}
 	stagnate := []filter{
 		AvoidFood,
+		SpaceStrict,
 		Tail,
 	}
 
