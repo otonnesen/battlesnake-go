@@ -12,18 +12,6 @@ type filter func(*MoveRequest, []*Point) []*Point
 // 	FloodFillScore int
 // }
 
-// Tail sorts moves based on whether or not the move
-// is a live snake's tail.
-func Tail(m *MoveRequest, moves []*Point) []*Point {
-	sort.Slice(moves, func(i, j int) bool {
-		if moves[j].IsTail(m) && !moves[i].IsTail(m) {
-			return false
-		}
-		return true
-	})
-	return moves
-}
-
 // Head removes heads of snakes larger than you.
 func Head(m *MoveRequest, moves []*Point) []*Point {
 	new := []*Point{}
@@ -63,6 +51,24 @@ func Valid(m *MoveRequest, moves []*Point) []*Point {
 		return new
 	}
 	Warning.Printf("Welp")
+	return moves
+}
+
+// Tail sorts moves based on their proximity to the
+// closest snake's tail
+func Tail(m *MoveRequest, moves []*Point) []*Point {
+	// Max int
+	var min = float64(int64(^uint64(0) >> 1))
+	var closest *Point
+	for _, snake := range m.Board.Snakes {
+		if dist := m.You.Head().DistanceFloat(snake.Tail()); dist < min {
+			min = dist
+			closest = snake.Tail()
+		}
+	}
+	sort.Slice(moves, func(i, j int) bool {
+		return moves[i].DistanceFloat(closest) < moves[j].DistanceFloat(closest)
+	})
 	return moves
 }
 
@@ -162,7 +168,6 @@ func getMoves(m *MoveRequest) []*Point {
 	checkValid := []filter{
 		Valid,
 		Head,
-		Tail,
 	}
 	space := []filter{
 		Food,
@@ -176,9 +181,8 @@ func getMoves(m *MoveRequest) []*Point {
 		Food,
 	}
 	stagnate := []filter{
-		Food,
 		AvoidFood,
-		Space,
+		Tail,
 	}
 
 	var dist = float64(int64(^uint64(0) >> 1))
