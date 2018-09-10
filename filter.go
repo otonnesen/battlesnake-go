@@ -29,19 +29,25 @@ func Tail(m *MoveRequest, moves []*Point) []*Point {
 // Removes heads of snakes larger than you.
 func Head(m *MoveRequest, moves []*Point) []*Point {
 	new := []*Point{}
+	var isLarger bool
 	for _, move := range moves {
-		for _, snake := range m.You.SmallerSnakes(m) {
+		for _, snake := range m.You.LargerSnakes(m) {
 			for _, n := range snake.Head().Neighbors() {
 				if Equal(move, n) {
-					new = append(new, move)
+					isLarger = true
 				}
 			}
+			if !isLarger {
+				new = append(new, move)
+			}
+			isLarger = false
 		}
 	}
 
 	if len(new) != 0 {
 		return new
 	}
+	Warning.Printf("Welp")
 	return moves
 }
 

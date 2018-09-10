@@ -35,3 +35,16 @@ func (s Snake) SmallerSnakes(m *MoveRequest) []Snake {
 	}
 	return smaller
 }
+
+// LargerSnakes returns a slice of every snake
+// with length strictly lesser than that of
+// snake s
+func (s Snake) LargerSnakes(m *MoveRequest) []Snake {
+	larger := []Snake{}
+	for _, snake := range m.Board.Snakes {
+		if len(snake.Body) >= len(s.Body) {
+			larger = append(larger, snake)
+		}
+	}
+	return larger
+}
