@@ -176,6 +176,7 @@ func getMoves(m *MoveRequest) []*Point {
 		Food,
 	}
 	stagnate := []filter{
+		Food,
 		AvoidFood,
 		Space,
 	}
