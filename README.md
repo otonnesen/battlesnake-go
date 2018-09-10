@@ -22,5 +22,5 @@ The web server runs on whatever port the $PORT environment variable is set to, a
 ## TODO
 - [ ] Write tests
 - [x] Finish implementing move filtering
-- [ ] Add filters to filtering system
-- [ ] Come up with sets of filters for different scenarios
+- [x] Add filters to filtering system
+- [x] Come up with sets of filters for different scenarios
