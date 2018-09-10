@@ -24,9 +24,7 @@ func Tail(m *MoveRequest, moves []*Point) []*Point {
 	return moves
 }
 
-// Head looks for spaces adjacent to shorter
-// enemy snakes' heads.
-// Removes heads of snakes larger than you.
+// Head removes heads of snakes larger than you.
 func Head(m *MoveRequest, moves []*Point) []*Point {
 	new := []*Point{}
 	var isLarger bool
@@ -65,6 +63,28 @@ func Valid(m *MoveRequest, moves []*Point) []*Point {
 		return new
 	}
 	Warning.Printf("Welp")
+	return moves
+}
+
+// AvoidFood looks for spaces that are not food.
+func AvoidFood(m *MoveRequest, moves []*Point) []*Point {
+	new := []*Point{}
+	var isFood bool
+	for _, move := range moves {
+		for _, food := range m.Board.Food {
+			if Equal(move, &food) {
+				isFood = true
+			}
+		}
+		if !isFood {
+			new = append(new, move)
+		}
+		isFood = false
+	}
+	if len(new) != 0 {
+		return new
+	}
+
 	return moves
 }
 
@@ -156,6 +176,7 @@ func getMoves(m *MoveRequest) []*Point {
 		Food,
 	}
 	stagnate := []filter{
+		AvoidFood,
 		Space,
 	}
 
