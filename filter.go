@@ -221,6 +221,12 @@ func getMoves(m *MoveRequest) []*Point {
 		return ChainFilters(m, checkValid, foodPanic)
 	}
 
+	// Get near food if not hungry
+	if dist > 5 {
+		return ChainFilters(m, checkValid, food)
+	}
+
+	// Avoid food when full
 	if m.You.Health > 30 {
 		return ChainFilters(m, checkValid, stagnate)
 	}
