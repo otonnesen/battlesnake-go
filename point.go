@@ -99,7 +99,13 @@ func (p Point) IsValid(m *MoveRequest) bool {
 // GetSnakeID returns the ID corresponding to the
 // snake whose body contains Point p.
 func (p Point) GetSnakeID(m *MoveRequest) string {
-	// TODO
+	for _, snake := range m.Board.Snakes {
+		for _, point := range snake.Body {
+			if Equal(&point, &p) {
+				return snake.ID
+			}
+		}
+	}
 	return ""
 }
 
