@@ -33,6 +33,7 @@ func Head(m *MoveRequest, moves []*Point) []*Point {
 	if len(new) != 0 {
 		return new
 	}
+	Warning.Printf("%d\n", m.Turn)
 	Warning.Printf("Welp")
 	return moves
 }
@@ -50,6 +51,7 @@ func Valid(m *MoveRequest, moves []*Point) []*Point {
 	if len(new) != 0 {
 		return new
 	}
+	Warning.Printf("%d\n", m.Turn)
 	Warning.Printf("Welp")
 	return moves
 }
