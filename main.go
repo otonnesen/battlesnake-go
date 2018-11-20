@@ -20,6 +20,8 @@ func main() {
 
 	http.HandleFunc("/start", LogRequest(start))
 	http.HandleFunc("/move", LogRequest(move))
+	http.HandleFunc("/end", LogRequest(end))
+	http.HandleFunc("/ping", LogRequest(ping))
 
 	Info.Printf("Server running on port %s\n", port)
 	http.ListenAndServe(":"+port, nil)

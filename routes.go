@@ -29,3 +29,11 @@ func move(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
 }
+
+func end(w http.ResponseWriter, req *http.Request) {
+	return
+}
+
+func ping(w http.ResponseWriter, req *http.Request) {
+	return
+}
