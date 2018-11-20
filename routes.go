@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -35,5 +36,7 @@ func end(w http.ResponseWriter, req *http.Request) {
 }
 
 func ping(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+	fmt.Fprintf(w, "Pong!")
 	return
 }
